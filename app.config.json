@@ -1,0 +1,6 @@
+{
+  "appId": "it.conflavoro.hse",
+  "nome": "Portale HSE",
+  "apiBaseUrl": "https://dvr.conflavoro.it/api",
+  "coloreSfondo": "#0b0b0c"
+}

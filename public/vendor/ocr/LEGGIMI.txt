@@ -1,0 +1,2 @@
+Lettori locali per la ricerca dei documenti sul dispositivo (nessuna rete, il contenuto resta nel browser).
+pdfjs-dist 6.4.299 (Apache-2.0), tesseract.js 5.1.1 (Apache-2.0), tesseract.js-core 5.1.1 (Apache-2.0), @tesseract.js-data/ita 1.0.0 (Apache-2.0, dati tessdata_best_int).

@@ -1,0 +1,800 @@
+/* Font del Portale HSE: Geist per tutto, Geist Mono per numeri, date e codici. */
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300..700&family=Geist+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   PORTALE HSE: token della specifica (stessi nomi e valori del design system).
+   Tailwind resta alla versione 3: i colori, la scala dei testi, le ombre e la curva
+   sono in tailwind.config.ts; qui le variabili che cambiano col tema o con la densita'.
+   ============================================================ */
+:root {
+  --hse-canvas: #FFFFFF;
+  --hse-surface: #FFFFFF;
+  --hse-sunken: #F4F4F5;
+  --hse-line: #E2E2E5;
+  --hse-fg: #111113;
+  --hse-fg-muted: #5E5E66;
+  --hse-fg-faint: #9A9AA2;
+  --hse-invert: #18181B;
+  --hse-on-invert: #FFFFFF;
+
+  --color-acid-400: #D4FF3A;
+  --color-acid-500: #BEEB1E;
+  --color-acid-950: #232E00;
+  --color-grafite-900: #18181B;
+
+  --spacing: 0.25rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.875rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+  --radius-2xl: 2.25rem;
+  --shadow-soft: 0 1px 2px rgb(14 14 16 / 0.04), 0 8px 24px -12px rgb(14 14 16 / 0.12);
+  --shadow-pop: 0 2px 4px rgb(14 14 16 / 0.06), 0 20px 40px -16px rgb(14 14 16 / 0.25);
+  --ease-snap: cubic-bezier(0.2, 0.8, 0.2, 1);
+  color-scheme: light;
+}
+
+/* Tema scuro: i token esistono, ma la prima versione usa solo il tema chiaro. */
+[data-theme="dark"] {
+  --hse-canvas: #000000;
+  --hse-surface: #111113;
+  --hse-sunken: #232326;
+  --hse-line: #34343A;
+  --hse-fg: #F4F4F2;
+  --hse-fg-muted: #A6A6AE;
+  --hse-fg-faint: #6B6B73;
+  --hse-invert: #F4F4F2;
+  --hse-on-invert: #111113;
+  color-scheme: dark;
+}
+
+/* Densita': il gestionale e' piu' fitto con le stesse classi. */
+[data-density="compact"] {
+  --spacing: 0.2rem;
+}
+
+/* ============================================================
+   DESIGN TOKENS — blu notte (navy) professionale, OKLCH.
+   Contratto shadcn-compatibile. Tema chiaro = neutri freddi
+   quasi-bianco; tema scuro = "blu notte" elegante (no nero piatto).
+   Un solo accento blu.
+   ============================================================ */
+:root {
+  --background: #ffffff;
+  --foreground: #111113;
+  --card: #ffffff;
+  --card-foreground: #111113;
+  --primary: #18181b;
+  --primary-foreground: #ffffff;
+  --accent: #d4ff3a;
+  --accent-foreground: #232e00;
+  --muted: #f4f4f5;
+  --muted-foreground: #5e5e66;
+  --border: #e2e2e5;
+  --ring: #d4ff3a;
+  --destructive: #d63d3e;
+  --destructive-foreground: #ffffff;
+}
+.dark {
+  --background: #000000;
+  --foreground: #f4f4f2;
+  --card: #111113;
+  --card-foreground: #f4f4f2;
+  --primary: #f4f4f2;
+  --primary-foreground: #111113;
+  --accent: #d4ff3a;
+  --accent-foreground: #232e00;
+  --muted: #232326;
+  --muted-foreground: #a6a6ae;
+  --border: #34343a;
+  --ring: #d4ff3a;
+  --destructive: #d63d3e;
+  --destructive-foreground: #ffffff;
+}
+
+/* ============================================================
+   BASE — sfondo neutro freddo + Titillium Web
+   ============================================================ */
+@layer base {
+  html {
+    font-family: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    font-feature-settings: 'ss01', 'tnum';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply min-h-screen text-ink font-sans;
+    /* Bianco perla: mai bianco ottico. */
+    background-color: #ffffff;
+    /* numeri tabellari: colonne allineate (come il Portale HSE) */
+    font-feature-settings: 'ss01', 'tnum';
+    letter-spacing: 0;
+  }
+
+  /* Selezione testo */
+  ::selection {
+    background: #d4ff3a;
+    color: #0e0e10;
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(14, 14, 16, 0.18);
+    border-radius: 8px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(14, 14, 16, 0.34);
+  }
+
+  /* Fuoco visibile della specifica: contorno acido 3 px e anello grafite 5 px. */
+  :focus-visible {
+    outline: 3px solid #d4ff3a;
+    outline-offset: 2px;
+    box-shadow: 0 0 0 5px #18181b;
+  }
+
+  /* iPhone ingrandisce la pagina se un campo ha il testo sotto i 16 px: sui dispositivi
+     touch tutti i campi stanno almeno a 16 px, qualunque classe abbiano. */
+  @media (hover: none) and (pointer: coarse) {
+    :is(input:not([type='checkbox']):not([type='radio']):not([type='range']), select, textarea):not([class*='text-h']):not([class*='text-display']):not([class*='text-title']) {
+      font-size: 16px !important;
+    }
+  }
+}
+
+/* ============================================================
+   SCALA TIPOGRAFICA (brand kit)
+   ============================================================ */
+@layer components {
+  /* Titoli delle vecchie schermate DVR dello studio: i nomi text-h1, text-h2, text-body
+     sono ora la scala della specifica (tailwind.config.ts). */
+  .studio-h1 {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+  }
+  .studio-h2 {
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.35;
+  }
+  .studio-body {
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  .text-body-sm {
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  .text-micro {
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.3;
+  }
+
+  /* Eyebrow di sezione: discreto, non gridato (tracking morbido) */
+  .label-upper {
+    @apply text-[11px] font-semibold uppercase tracking-[0.08em] text-ink-muted;
+  }
+
+  /* Titolo di sezione moderno: niente maiuscolo gridato, peso medio.
+     Sostituisce gradualmente i vecchi 'text-h2 uppercase tracking-wider2'. */
+  .section-title {
+    @apply text-[15px] font-semibold tracking-tight text-ink;
+  }
+
+  /* ============================================================
+     CARD — glass freddo elegante
+     ============================================================ */
+  .card-luxury {
+    @apply relative rounded-[1.25rem] bg-white;
+    box-shadow: inset 0 0 0 1px #e2e2e5;
+    transition: transform 200ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 200ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  /* Solo dispositivi con puntatore reale: su touch l'hover resta "appiccicato". */
+  @media (hover: hover) and (pointer: fine) {
+    .card-luxury:hover {
+      box-shadow: inset 0 0 0 1px #c4c4c9, 0 1px 2px rgb(14 14 16 / 0.04), 0 8px 24px -12px rgb(14 14 16 / 0.12);
+    }
+  }
+  .card-luxury-interactive {
+    animation: none;
+  }
+
+  /* ============================================================
+     PULSANTI (Portale HSE): forma a pillola, grafite pieno o contorno.
+     ============================================================ */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5
+           text-[14px] font-medium text-white;
+    min-height: 2.75rem;
+    background: #18181b;
+    transition: transform 150ms cubic-bezier(0.2, 0.8, 0.2, 1), opacity 150ms ease-out;
+  }
+  .btn-primary:hover:not(:disabled) {
+    opacity: 0.88;
+  }
+  .btn-primary:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+  .btn-primary:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  /* Accento acido: per l'azione principale di una schermata. */
+  .btn-acido {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5
+           text-[14px] font-medium;
+    min-height: 2.75rem;
+    background: #d4ff3a;
+    color: #232e00;
+    transition: transform 150ms cubic-bezier(0.2, 0.8, 0.2, 1), background-color 150ms ease-out;
+  }
+  .btn-acido:hover:not(:disabled) {
+    background: #beeb1e;
+  }
+  .btn-acido:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+  .btn-acido:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-4 py-2.5
+           text-[14px] font-medium text-ink bg-white;
+    min-height: 2.75rem;
+    box-shadow: inset 0 0 0 1.5px #e2e2e5;
+    transition: transform 150ms cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 150ms ease-out;
+  }
+  .btn-ghost:hover {
+    box-shadow: inset 0 0 0 1.5px #9a9aa2;
+  }
+  .btn-ghost:active {
+    transform: scale(0.98);
+  }
+  .btn-icon {
+    @apply inline-flex h-10 w-10 items-center justify-center rounded-full
+           text-ink-muted hover:text-ink hover:bg-perla-velo
+           transition-colors duration-150;
+  }
+  @media (max-width: 1023px) {
+    .btn-primary,
+    .btn-acido,
+    .btn-ghost {
+      min-height: 44px;
+    }
+    .btn-icon {
+      min-width: 44px;
+      min-height: 44px;
+    }
+  }
+
+  /* Etichette di stato (chip della specifica): sempre testo e puntino, mai solo colore. */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.375rem;
+    height: 1.75rem;
+    padding-inline: 0.625rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    line-height: 1.35;
+    letter-spacing: 0.02em;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .chip-dot { width: 0.5rem; height: 0.5rem; border-radius: 9999px; background: currentColor; }
+  .chip-ok { background: #cff2dc; color: #0b3d20; }
+  .chip-warn { background: #ffe6a8; color: #432b00; }
+  .chip-danger { background: #ffd3cf; color: #4f1110; }
+  .chip-info { background: #dce7f7; color: #122947; }
+  .chip-outline { box-shadow: inset 0 0 0 1.5px currentColor; }
+  .chip-neutral,
+  .chip-neutro { background: var(--hse-sunken); color: var(--hse-fg-muted); box-shadow: inset 0 0 0 1px var(--hse-line); }
+
+  /* ============================================================
+     CAMPI: incassati grigio chiaro, al fuoco bordo pieno su bianco.
+     Su telefono 16px per evitare l'ingrandimento di iOS.
+     ============================================================ */
+  .input-luxury,
+  .input-field {
+    @apply w-full h-12 rounded-[0.875rem] px-4 bg-perla-velo border-0
+           text-base sm:text-[14px] text-ink placeholder:text-grafite-400
+           transition-shadow duration-150;
+    box-shadow: inset 0 0 0 1.5px transparent;
+  }
+  .input-luxury:hover,
+  .input-field:hover {
+    box-shadow: inset 0 0 0 1.5px #e2e2e5;
+  }
+  .input-luxury:focus,
+  .input-field:focus {
+    background: #ffffff;
+    box-shadow: inset 0 0 0 2px #111113;
+  }
+
+  /* ============================================================
+     MENU LATERALE NERO (Portale HSE)
+     ============================================================ */
+  .sidebar-link {
+    @apply flex min-h-[42px] items-center gap-3 rounded-full px-3 py-2 text-[14px]
+           font-medium text-grafite-300
+           transition-colors duration-150;
+  }
+  .sidebar-link:hover {
+    @apply text-white bg-grafite-800;
+  }
+  .sidebar-link[data-active='true'] {
+    @apply text-grafite-950 bg-white;
+  }
+
+  /* ============================================================
+     LOGO ANIMATIONS
+     ============================================================ */
+  .logo-clickable {
+    @apply cursor-pointer select-none transition-transform;
+  }
+  .logo-clickable:hover {
+    transform: scale(1.04);
+  }
+  .logo-clickable:active {
+    animation: logoBounce 600ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+  /* Nel layer dei componenti: hidden e sm:inline-flex sui singoli tasti devono poterlo nascondere. */
+  /* Tasto in rilievo (scorciatoie). */
+  .tasto {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.15rem;
+    border-radius: 5px;
+    padding: 0.1rem 0.35rem;
+    font-size: 11px;
+    font-weight: 500;
+    line-height: 1.2;
+    font-family: 'Geist Mono', ui-monospace, monospace;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.03));
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 1px 0 rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.08);
+  }
+  .tasto-chiaro {
+    background: #ffffff;
+    box-shadow: 0 1px 0 rgba(14, 14, 16, 0.14), 0 0 0 1px #e2e2e5;
+    color: #5e5e66;
+  }
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+@layer utilities {
+  /* Titoli del Portale HSE: Geist leggero e grande, la gerarchia la fa la scala. */
+  .titolo-display {
+    font-family: 'Geist', ui-sans-serif, system-ui, sans-serif;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+  }
+  /* Numeri come nel Portale HSE: Geist con cifre tabellari (il mono resta per codici e tasti). */
+  .cifre {
+    font-family: 'Geist', ui-sans-serif, system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.01em;
+  }
+
+  /* ---------- Linguaggio v3: superfici, vetro satinato, aree di comando ---------- */
+  /* Superficie chiara con bordo sottilissimo e ombra a strati (luce dall'alto). */
+  .superficie {
+    background: #ffffff;
+    border: 1px solid #e2e2e5;
+    box-shadow: 0 1px 2px rgb(14 14 16 / 0.04), 0 8px 24px -12px rgb(14 14 16 / 0.12);
+  }
+  .superficie-alta {
+    background: #ffffff;
+    border: 1px solid #e2e2e5;
+    box-shadow: 0 2px 4px rgb(14 14 16 / 0.06), 0 20px 40px -16px rgb(14 14 16 / 0.25);
+  }
+  /* Vetro satinato leggero per lo spazio di lavoro e la palette. */
+  .vetro {
+    background: rgba(255, 255, 255, 0.82);
+    -webkit-backdrop-filter: blur(18px) saturate(1.15);
+    backdrop-filter: blur(18px) saturate(1.15);
+  }
+  /* Area di comando: grafite pieno, come la barra e Pronto Ispezioni del Portale HSE. */
+  .comando {
+    color: #f4f4f2;
+    background: #18181b;
+  }
+  .comando-profondo {
+    color: #f4f4f2;
+    background: #000000;
+  }
+  /* Micro interazione: il pulsante si abbassa sotto il dito. */
+  .premi {
+    transition: transform 160ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 200ms ease-out, background-color 200ms ease-out, border-color 200ms ease-out, color 200ms ease-out;
+  }
+  .premi:active:not(:disabled) {
+    transform: scale(0.965);
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .premi-su:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
+  }
+  /* Elementi che GSAP fa entrare: invisibili finche' la coreografia non parte. */
+  .js-gsap [data-entra] {
+    opacity: 0;
+  }
+  /* Maschera per le scritte che salgono riga per riga. */
+  .riga-maschera {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.08em;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .animate-riga,
+    .animate-riga-lenta,
+    .animate-comparsa {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    .animate-alone {
+      animation: none !important;
+      opacity: 0.6 !important;
+    }
+  }
+
+  /* Mantengo il nome storico per non rompere i consumer, ma il gradiente
+     è ora blu notte (acciaio → navy). */
+  .text-gradient-violet {
+    color: #18181b;
+  }
+
+  .stripe-noise {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.04 0'/></filter><rect width='200' height='200' filter='url(%23n)'/></svg>");
+  }
+}
+
+/* Scrivania del DVR: due colonne solo se lo spazio reale basta (il Falco aperto lo riduce). */
+.scrivania-contenitore { container-type: inline-size; }
+.scrivania-lista-col { display: none; }
+@container (min-width: 52rem) {
+  .scrivania-due { grid-template-columns: 18rem minmax(0, 1fr); }
+  .scrivania-lista-col { display: block; }
+}
+
+/* Scrivania per paragrafi (cowork): indice, paragrafo, dati e controlli secondo lo spazio vero. */
+.cowork-contenitore { container-type: inline-size; }
+.cowork-griglia { display: grid; gap: 1rem; align-items: start; grid-template-columns: minmax(0, 1fr); }
+.cowork-indice { display: none; }
+.cowork-solo-largo { display: none; }
+.cowork-destra { grid-column: 1 / -1; }
+@container (min-width: 50rem) {
+  .cowork-griglia { grid-template-columns: 15rem minmax(0, 1fr); }
+  .cowork-indice { display: block; grid-row: 1 / span 2; position: sticky; top: 1rem; max-height: calc(100dvh - 9rem); overflow-y: auto; border-radius: 1.25rem; }
+  .cowork-solo-stretto-indice { display: none; }
+  .cowork-destra { grid-column: 2; }
+  .cowork-solo-largo { display: block; }
+  .cowork-solo-stretto-controlli { display: none; }
+}
+@container (min-width: 76rem) {
+  .cowork-griglia { grid-template-columns: 15rem minmax(0, 1fr) 21rem; }
+  .cowork-destra { grid-column: 3; grid-row: 1; }
+}
+.cowork-paragrafo { container-type: inline-size; }
+.cowork-affiancati { display: grid; gap: 0.75rem; grid-template-columns: minmax(0, 1fr); }
+@container (min-width: 36rem) {
+  .cowork-affiancati { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Falco principale: punto della schermata che il Falco sta mostrando. */
+.falco-evidenza {
+  outline: 3px solid #beeb1e;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 8px rgba(212, 255, 58, 0.35);
+  transition: box-shadow 300ms ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .falco-evidenza {
+    transition: none;
+  }
+}
+
+/* ============================================================
+   PORTALE HSE: componenti della specifica (02-componenti).
+   I pulsanti della specifica si scrivono "btn btn-primary": con .btn davanti le varianti
+   vincono sulle classi storiche omonime (btn-primary, btn-ghost, btn-icon da sole restano
+   quelle di prima finche' le viste non passano ai nomi nuovi).
+   ============================================================ */
+@layer components {
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+    height: 2.75rem; min-height: 0; padding: 0 1.25rem; border-radius: 9999px;
+    font-weight: 500; font-size: 0.875rem; line-height: 1.45; white-space: nowrap;
+    transition: background-color 150ms var(--ease-snap), transform 150ms var(--ease-snap), opacity 150ms var(--ease-snap);
+  }
+  .btn:active { transform: scale(0.98); }
+  .btn:disabled { opacity: 0.4; pointer-events: none; }
+  .btn.btn-sm { height: 2.25rem; padding-inline: 0.875rem; }
+  .btn.btn-lg { height: 3.25rem; padding-inline: 1.5rem; font-size: 1rem; }
+  .btn.btn-primary { background: var(--hse-invert); color: var(--hse-on-invert); box-shadow: none; }
+  .btn.btn-primary:hover { opacity: 0.88; }
+  .btn-accent { background: #d4ff3a; color: #232e00; }
+  .btn-accent:hover { background: #beeb1e; }
+  .btn-secondary { background: var(--hse-surface); color: var(--hse-fg); box-shadow: inset 0 0 0 1.5px var(--hse-line); }
+  .btn-secondary:hover { box-shadow: inset 0 0 0 1.5px var(--hse-fg-faint); }
+  .btn.btn-ghost { background: transparent; color: var(--hse-fg); box-shadow: none; }
+  .btn.btn-ghost:hover { background: var(--hse-sunken); }
+  .btn-danger { background: #d63d3e; color: #fff; }
+  .btn.btn-icon { width: 2.75rem; padding: 0; color: inherit; }
+  .btn-arrow { padding-right: 0.3rem; }
+  .btn-arrow > .btn-arrow-dot { display: grid; place-items: center; width: 2.15rem; height: 2.15rem; border-radius: 9999px; background: var(--hse-surface); color: var(--hse-fg); }
+
+  /* Freccia tonda nell'angolo delle card (anche Chiudi dei fogli). */
+  .go {
+    display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 9999px; flex-shrink: 0;
+    box-shadow: inset 0 0 0 1.5px currentColor; transition: background-color 150ms, color 150ms;
+  }
+  .go:hover, a:hover > .go, .tile:hover .go { background: #18181b; color: #d4ff3a; box-shadow: none; }
+  .go-solid { background: #18181b; color: #fff; box-shadow: none; }
+
+  /* Righe oblique: periodo futuro, dato non disponibile, parte mancante. */
+  .hatch { background-image: repeating-linear-gradient(135deg, currentColor 0 2px, transparent 2px 7px); opacity: 0.35; }
+
+  .tile {
+    position: relative; display: flex; flex-direction: column; justify-content: space-between;
+    min-height: calc(var(--spacing) * 38); padding: calc(var(--spacing) * 5); border-radius: var(--radius-xl);
+    color: #0e0e10; transition: transform 200ms var(--ease-snap), box-shadow 200ms var(--ease-snap);
+  }
+  a.tile:hover, button.tile:hover { transform: translateY(-2px); box-shadow: var(--shadow-pop); }
+
+  .card { background: var(--hse-surface); border-radius: var(--radius-lg); padding: calc(var(--spacing) * 5); box-shadow: inset 0 0 0 1px var(--hse-line); }
+
+  /* Sotto-schede a pillola (link: il tasto Indietro del browser funziona). */
+  .tabs { display: inline-flex; gap: 0.25rem; padding: 0.25rem; border-radius: 9999px; background: var(--hse-sunken); }
+  .tab { display: inline-flex; align-items: center; justify-content: center; gap: 0.375rem; height: 2.25rem; padding-inline: 1rem; border-radius: 9999px; font-size: 0.875rem; font-weight: 500; color: var(--hse-fg-muted); }
+  .tab:hover { color: var(--hse-fg); }
+  .tab[aria-selected='true'] { background: var(--hse-surface); color: var(--hse-fg); box-shadow: var(--shadow-soft); }
+
+  .field-label { display: block; margin-bottom: 0.375rem; font-size: 0.875rem; font-weight: 500; }
+  .field-hint { margin-top: 0.375rem; font-size: 0.75rem; color: var(--hse-fg-muted); }
+  .field-error { margin-top: 0.375rem; font-size: 0.75rem; color: #d63d3e; }
+  .input {
+    width: 100%; height: 3rem; padding-inline: 1rem; border-radius: var(--radius-md);
+    background: var(--hse-sunken); color: var(--hse-fg); box-shadow: inset 0 0 0 1.5px transparent; transition: box-shadow 150ms;
+  }
+  .input::placeholder { color: var(--hse-fg-faint); }
+  .input:hover { box-shadow: inset 0 0 0 1.5px var(--hse-line); }
+  .input:focus { outline: none; box-shadow: inset 0 0 0 2px var(--hse-fg); background: var(--hse-surface); }
+  .input[aria-invalid='true'] { box-shadow: inset 0 0 0 2px #d63d3e; }
+  textarea.input { height: auto; min-height: 6rem; padding-block: 0.75rem; resize: vertical; }
+
+  .alert { display: flex; gap: 0.75rem; align-items: flex-start; padding: 1rem 1.125rem; border-radius: var(--radius-lg); font-size: 0.875rem; }
+
+  .table { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 0.875rem; }
+  .table th { text-align: left; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.02em; color: var(--hse-fg-muted); padding: calc(var(--spacing) * 3) calc(var(--spacing) * 4); border-bottom: 1px solid var(--hse-line); }
+  .table td { padding: calc(var(--spacing) * 3.5) calc(var(--spacing) * 4); border-bottom: 1px solid var(--hse-line); }
+  .table tbody tr:hover td { background: var(--hse-sunken); }
+
+  /* Testata di sezione: l'unico punto in cui il colore di categoria fa da fondo. */
+  .testata { border-radius: var(--radius-xl); padding: calc(var(--spacing) * 6); color: #0e0e10; }
+
+  /* Voce del menu laterale nero. */
+  .nav-item {
+    display: flex; align-items: center; gap: 0.75rem; height: 2.625rem; padding-inline: 0.375rem 0.75rem; border-radius: 9999px;
+    color: #c4c4c9; font-size: 0.875rem; font-weight: 500;
+  }
+  .nav-item:hover { background: #232326; color: #fff; }
+  .nav-item[aria-current='page'] { background: #fff; color: #0e0e10; }
+  .nav-dot { display: grid; place-items: center; width: 1.875rem; height: 1.875rem; border-radius: 9999px; flex-shrink: 0; color: #0e0e10; }
+
+  /* Scelta a riquadri (orari, piani, metodi). */
+  .slot { min-height: 3.5rem; padding: 0.5rem 0.75rem; border-radius: var(--radius-lg); box-shadow: inset 0 0 0 1.5px var(--hse-line); font-size: 0.875rem; font-weight: 500; text-align: left; }
+  .slot:hover { box-shadow: inset 0 0 0 1.5px var(--hse-fg); }
+  .slot[aria-pressed='true'], :checked + .slot { background: var(--hse-invert); color: var(--hse-on-invert); box-shadow: none; }
+
+  /* Foglio per le azioni brevi: dal basso su telefono, da destra su computer. */
+  .sheet-backdrop { position: fixed; inset: 0; background: rgb(0 0 0 / 0.45); opacity: 0; pointer-events: none; transition: opacity 300ms; z-index: 60; }
+  .sheet-backdrop.open { opacity: 1; pointer-events: auto; }
+  .sheet {
+    position: fixed; z-index: 61; background: var(--hse-surface); display: flex; flex-direction: column;
+    left: 0; right: 0; bottom: 0; max-height: 90dvh; border-radius: 30px 30px 0 0;
+    transform: translateY(105%); transition: transform 380ms var(--ease-snap), width 300ms var(--ease-snap);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  .sheet.open { transform: none; }
+  .sheet.trascina { transition: none; }
+  @media (min-width: 1024px) {
+    .sheet { left: auto; top: 0.75rem; bottom: 0.75rem; right: 0.75rem; width: 32rem; max-height: none; border-radius: var(--radius-2xl); transform: translateX(110%); padding-bottom: 0; }
+    .sheet.sheet-wide { width: 46rem; }
+  }
+  .sheet-maniglia { display: flex; justify-content: center; padding: 10px 0 0; cursor: grab; touch-action: none; }
+  .sheet-maniglia i { width: 40px; height: 5px; border-radius: 9999px; background: var(--hse-line); }
+  @media (min-width: 1024px) {
+    .sheet-maniglia { display: none; }
+  }
+}
+
+/* ============================================================
+   PORTALE HSE: app per telefono (01-design-system/telefono.css e 03 §2).
+   La barra in basso segue 03: colonne uguali, etichette sempre visibili,
+   voce attiva in acido senza pillola, assistente tondo al centro.
+   ============================================================ */
+@layer components {
+  .app {
+    position: relative; width: 100%; height: 100dvh; overflow: hidden; background: var(--hse-canvas);
+    display: flex; flex-direction: column;
+  }
+
+  .topbar {
+    position: absolute; inset: env(safe-area-inset-top, 0px) 0 auto 0; z-index: 30; height: 52px; display: flex; align-items: center; gap: 8px; padding: 0 12px;
+    background: color-mix(in srgb, var(--hse-canvas) 88%, transparent); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+    border-bottom: 1px solid transparent; transition: border-color 200ms;
+  }
+  /* Fascia sopra la topbar (area sicura): stesso fondo, cosi' il contenuto non passa sotto l'orologio. */
+  .topbar::before { content: ''; position: absolute; left: 0; right: 0; bottom: 100%; height: env(safe-area-inset-top, 0px); background: inherit; }
+  .topbar .tb-title { flex: 1; min-width: 0; text-align: center; font-weight: 600; font-size: 16px; opacity: 0; transform: translateY(6px); transition: all 220ms var(--ease-snap); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .app[data-compatta='1'] .topbar { border-color: var(--hse-line); }
+  .app[data-compatta='1'] .topbar .tb-title, .app[data-interna='1'] .topbar .tb-title { opacity: 1; transform: none; }
+  .tb-btn { position: relative; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 9999px; flex-shrink: 0; color: var(--hse-fg); }
+  .tb-btn:active { background: var(--hse-sunken); transform: scale(0.94); }
+  .tb-iniziali { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 12px; flex-shrink: 0; background: #18181b; color: #fff; font-size: 13px; font-weight: 600; }
+  .tb-iniziali:disabled { opacity: 1; cursor: default; }
+  .tb-puntino { position: absolute; top: 8px; right: 9px; width: 8px; height: 8px; border-radius: 9999px; background: #d63d3e; box-shadow: 0 0 0 2px var(--hse-canvas); }
+
+  .scroller {
+    flex: 1; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+    padding: calc(52px + env(safe-area-inset-top, 0px)) 0 calc(112px + env(safe-area-inset-bottom, 0px));
+    scrollbar-width: none;
+  }
+  .scroller::-webkit-scrollbar { display: none; }
+  .pagina { padding: 0 20px; }
+
+  /* Barra in basso: pillola nera, cinque colonne uguali, assistente al centro. */
+  .tabbar {
+    position: absolute; left: 14px; right: 14px; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); z-index: 40; height: 66px; border-radius: 9999px; background: #000;
+    display: grid; grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); align-items: center; justify-items: center; padding: 0 6px;
+    box-shadow: 0 12px 30px -10px rgb(0 0 0 / 0.5);
+  }
+  .tab-it {
+    position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+    width: 100%; max-width: 68px; height: 54px; border-radius: 22px; color: #fff; transition: color 220ms var(--ease-snap), transform 200ms var(--ease-snap);
+  }
+  .tab-it .tab-etichetta { font-size: 10.5px; font-weight: 600; line-height: 1; opacity: 0.75; white-space: nowrap; }
+  .tab-it[aria-current='page'], .tab-it:hover { color: #d4ff3a; }
+  .tab-it[aria-current='page'] .tab-etichetta, .tab-it:hover .tab-etichetta { opacity: 1; }
+  .tab-it:active { transform: scale(0.92); }
+  .tab-icona { position: relative; display: grid; place-items: center; }
+  .tab-badge {
+    position: absolute; top: -6px; left: calc(100% - 6px); min-width: 16px; height: 16px; padding: 0 4px; border-radius: 9999px;
+    background: #d4ff3a; color: #000; font-size: 10px; font-weight: 700; line-height: 1; display: grid; place-items: center; font-variant-numeric: tabular-nums;
+  }
+  /* 04-schermate/telefono: il contatore resta visibile anche sulla voce attiva. */
+  .tab-ai {
+    display: grid; place-items: center; width: 56px; height: 56px; border-radius: 9999px; background: #d4ff3a; color: #232e00; overflow: hidden;
+    box-shadow: 0 0 0 3px #000, 0 6px 16px -6px rgb(212 255 58 / 0.6); transition: transform 200ms var(--ease-snap);
+  }
+  .tab-ai:active { transform: scale(0.92); }
+  @media (max-width: 379px) {
+    .tabbar { left: 10px; right: 10px; }
+    .tab-ai { width: 52px; height: 52px; }
+    .tab-it .tab-etichetta { font-size: 10px; }
+  }
+
+  /* Transizioni di pagina: push = piu' in profondita', pop = indietro, tab = cambio voce della barra. */
+  @keyframes v-push { from { transform: translateX(36%); opacity: 0; } }
+  @keyframes v-pop { from { transform: translateX(-24%); opacity: 0; } }
+  @keyframes v-tab { from { transform: translateY(10px); opacity: 0; } }
+  .v-push { animation: v-push 340ms var(--ease-snap); }
+  .v-pop { animation: v-pop 300ms var(--ease-snap); }
+  .v-tab { animation: v-tab 260ms var(--ease-snap); }
+
+  /* Comparsa a cascata dei blocchi di una pagina (anche dentro la radice unica di una vista). */
+  @keyframes rise { from { transform: translateY(14px); opacity: 0; } }
+  .cascata > :not(:only-child), .cascata > :only-child > * { animation: rise 420ms var(--ease-snap) both; }
+  .cascata > :nth-child(2), .cascata > :only-child > :nth-child(2) { animation-delay: 40ms; }
+  .cascata > :nth-child(3), .cascata > :only-child > :nth-child(3) { animation-delay: 80ms; }
+  .cascata > :nth-child(4), .cascata > :only-child > :nth-child(4) { animation-delay: 120ms; }
+  .cascata > :nth-child(5), .cascata > :only-child > :nth-child(5) { animation-delay: 160ms; }
+  .cascata > :nth-child(6), .cascata > :only-child > :nth-child(6) { animation-delay: 200ms; }
+  .cascata > :nth-child(n + 7), .cascata > :only-child > :nth-child(n + 7) { animation-delay: 240ms; }
+
+  /* Documenti > Cartelle: cartelle d'archivio sovrapposte che si impilano scorrendo. */
+  @keyframes cartella-in { from { translate: 0 56px; opacity: 0; } }
+  .cartella {
+    position: sticky; display: block; padding-top: 32px; margin-top: -78px; transform-origin: 50% 0;
+    scale: calc(1 - var(--sopra, 0) * 0.035); filter: brightness(calc(1 - var(--sopra, 0) * 0.05));
+    transition: scale 320ms var(--ease-snap), filter 320ms; animation: cartella-in 560ms var(--ease-snap) both; animation-delay: calc(var(--i, 0) * 60ms);
+  }
+  .cartella:first-child { margin-top: 0; }
+  .cartella:active .cartella-corpo { filter: brightness(0.96); }
+  .cartella-linguetta { position: absolute; top: 0; height: 34px; width: 48%; display: flex; align-items: center; gap: 6px; padding: 0 12px 2px; border-radius: 14px 14px 0 0; font-size: 13px; font-weight: 600; color: #0e0e10; }
+  .cartella-corpo { display: flex; flex-direction: column; justify-content: space-between; gap: 22px; min-height: 172px; padding: 16px 18px; border-radius: 1.5rem; color: #0e0e10; box-shadow: 0 -8px 20px -12px rgb(0 0 0 / 0.35); }
+
+  /* Schede orizzontali a scatto, con puntini. */
+  .carosello { display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-padding: 0 20px; padding: 2px 20px 6px; margin: 0 -20px; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .carosello::-webkit-scrollbar { display: none; }
+  .carosello > * { scroll-snap-align: start; flex-shrink: 0; }
+  .puntini { display: flex; justify-content: center; gap: 6px; margin-top: 10px; }
+  .puntini i { width: 6px; height: 6px; border-radius: 9999px; background: var(--hse-line); transition: all 250ms var(--ease-snap); }
+  .puntini i[data-on] { width: 18px; background: var(--hse-fg); }
+
+  /* Righe da trascinare a sinistra per le azioni rapide (78 px per azione). */
+  .swipe { position: relative; overflow: hidden; touch-action: pan-y; }
+  .swipe-azioni { position: absolute; inset: 0 0 0 auto; display: flex; }
+  .swipe-azioni > * { display: grid; place-items: center; align-content: center; gap: 2px; width: 78px; font-size: 12px; font-weight: 600; }
+  .swipe-fronte { position: relative; background: var(--hse-surface); transition: transform 260ms var(--ease-snap); will-change: transform; }
+  .swipe.trascina .swipe-fronte { transition: none; }
+
+  /* Fisarmonica (details/summary). */
+  .fisa { border-top: 1px solid var(--hse-line); }
+  .fisa:first-child { border-top: 0; }
+  .fisa > summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 16px 0; }
+  .fisa > summary::-webkit-details-marker { display: none; }
+  .fisa > summary .fisa-ico { transition: transform 260ms var(--ease-snap); }
+  .fisa[open] > summary .fisa-ico { transform: rotate(180deg); }
+  .fisa-corpo { overflow: hidden; }
+
+  /* Striscia dei giorni (Scadenze). */
+  .giorno { display: grid; place-items: center; gap: 2px; width: 52px; height: 74px; border-radius: 9999px; box-shadow: inset 0 0 0 1.5px var(--hse-line); font-size: 13px; color: var(--hse-fg-muted); flex-shrink: 0; }
+  .giorno b { font-size: 17px; font-weight: 500; color: var(--hse-fg); }
+  .giorno[aria-pressed='true'] { background: #18181b; box-shadow: none; color: #c4c4c9; }
+  .giorno[aria-pressed='true'] b { color: #fff; }
+  .giorno .g-dot { width: 5px; height: 5px; border-radius: 9999px; background: currentColor; }
+
+  /* Pulsante flottante (es. aggiungi lavoratore). */
+  .fab {
+    position: fixed; right: 22px; bottom: calc(98px + env(safe-area-inset-bottom, 0px)); z-index: 35; width: 58px; height: 58px; border-radius: 9999px; background: #d4ff3a; color: #232e00;
+    display: grid; place-items: center; box-shadow: 0 12px 26px -10px rgb(0 0 0 / 0.45); transition: transform 200ms var(--ease-snap);
+  }
+  .fab:active { transform: scale(0.92); }
+
+  /* Tocco: tutto cio' che si tocca si schiaccia leggermente. */
+  .tocco { transition: transform 160ms var(--ease-snap); }
+  .tocco:active { transform: scale(0.97); }
+
+  /* Messaggio breve (toast): pillola grafite in basso al centro, sopra la barra sul telefono. */
+  @keyframes toast-in { from { transform: translateY(8px); opacity: 0; } }
+  .toast {
+    display: flex; align-items: center; gap: 10px; padding: 6px 16px 6px 6px; border-radius: 9999px; background: #18181b; color: #fff;
+    font-size: 0.875rem; line-height: 1.45; box-shadow: var(--shadow-pop); animation: toast-in 300ms var(--ease-snap) both; transition: opacity 300ms;
+  }
+  .toast[data-uscita='1'] { opacity: 0; }
+  .toast-ico { display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border-radius: 9999px; background: #d4ff3a; color: #232e00; flex-shrink: 0; }
+
+  /* Pulsante fisso dell'assistente sul computer. */
+  .ai-fab {
+    position: fixed; right: 20px; bottom: 20px; z-index: 45; display: flex; align-items: center; gap: 10px; height: 56px; padding: 0 20px 0 8px; border-radius: 9999px;
+    background: #d4ff3a; color: #232e00; font-size: 1rem; line-height: 1.5; font-weight: 500; box-shadow: var(--shadow-pop); transition: background-color 150ms, transform 150ms var(--ease-snap);
+  }
+  .ai-fab:hover { background: #beeb1e; }
+  .ai-fab:active { transform: scale(0.97); }
+  .ai-fab-cerchio { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 9999px; background: #000; overflow: hidden; }
+}
+
+/* Con prefers-reduced-motion niente cascata, niente transizioni di pagina, niente cartelle in movimento. */
+@media (prefers-reduced-motion: reduce) {
+  .v-push, .v-pop, .v-tab,
+  .cascata > *, .cascata > :only-child > *,
+  .cartella, .toast {
+    animation: none !important;
+  }
+  .cartella, .swipe-fronte, .sheet, .tab-it, .tab-ai, .topbar .tb-title {
+    transition: none !important;
+  }
+}
